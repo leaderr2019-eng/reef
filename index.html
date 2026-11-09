@@ -103,6 +103,12 @@ button{font-family:inherit;cursor:pointer;border:0}
  #mission{grid-column:1 / span 2;grid-row:2}
  #bwrap{grid-column:2;grid-row:1 / span 2}
  #bottom{grid-column:1;grid-row:2;flex-wrap:wrap}
+ .hbox{padding:1vh 1vh 1.4vh}.hbox .lb{font-size:clamp(13px,2.4vh,26px)}.hbox .vl{font-size:clamp(32px,6.5vh,72px)}
+ #mission .lb{font-size:clamp(16px,2.8vh,30px)}
+ .goal,.goal img{width:clamp(46px,8vh,84px);height:clamp(46px,8vh,84px)}.goal span{min-width:clamp(22px,3.4vh,36px);height:clamp(22px,3.4vh,36px);font-size:clamp(13px,2vh,20px);border-radius:20px}
+ #sbar{height:clamp(12px,1.6vh,18px)}.smark{width:clamp(22px,3.2vh,34px);height:clamp(22px,3.2vh,34px);margin:calc(clamp(22px,3.2vh,34px)/-2) 0 0 calc(clamp(22px,3.2vh,34px)/-2)}
+ .boost,#bPause{width:clamp(64px,10vh,110px)!important;height:clamp(64px,10vh,110px)!important}.boost img{width:70%;height:70%}
+ #gwrap{grid-template-columns:minmax(240px,32vw) 1fr}
 }
 /* ---- popups ---- */
 #pop{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:rgba(0,8,25,.6);backdrop-filter:blur(2px)}
