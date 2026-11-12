@@ -1882,7 +1882,7 @@ if (typeof module !== 'undefined') module.exports = I18N_EN;
 
   // SDK Пикабу Игр (https://games.pikabu.ru/sdk/docs). Вне площадки или с блокировщиком рекламы игра работает без него.
   const Platform = (() => {
-    let sdk = null, started = false, wantStart = false, onReady = [], lastFs = Date.now();
+    let sdk = null, started = false, wantStart = false, onReady = [], lastFs = 0;
     const timeout = (p, ms) => Promise.race([p, new Promise(r => setTimeout(() => r(false), ms))]);
     function load() {
       try {
@@ -1914,9 +1914,9 @@ if (typeof module !== 'undefined') module.exports = I18N_EN;
         finally { Gate.set('ad', false); }
         return !!(res && res.rendered !== false && res.reward === true);
       },
-      // полноэкранная реклама между уровнями: не чаще раза в 2 мин (и не раньше 2 мин после запуска), с 4-го уровня
+      // полноэкранная реклама между уровнями (правило площадки: не чаще раза в 2 мин)
       async interstitial() {
-        if (Date.now() - lastFs < 125000 || (SV && SV.lvl < 4)) return false;
+        if (Date.now() - lastFs < 121000) return false;
         try { if (!(sdk && sdk.ads && sdk.ads.fullscreen && sdk.ads.fullscreen.isSupported)) return false; } catch (e) { return false; }
         let res = null;
         try {
@@ -2609,7 +2609,10 @@ if (typeof module !== 'undefined') module.exports = I18N_EN;
   async function betweenLevels(next) {
     if (betweenBusy) return; betweenBusy = true;
     closePop();
-    try { await Platform.interstitial(); } catch (e) {}
+    // реклама после каждых 3 сыгранных уровней (победа или поражение); если площадка не дала — пробуем на следующем
+    SV.played = (SV.played || 0) + 1;
+    if (SV.played >= 3) { let shown = false; try { shown = await Platform.interstitial(); } catch (e) {} if (shown) SV.played = 0; }
+    save();
     betweenBusy = false; next();
   }
   function onLose(reason) {
